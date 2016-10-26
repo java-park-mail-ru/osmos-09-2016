@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import ru.mail.park.Factory.Factory;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.model.UserSession;
 
@@ -16,6 +17,7 @@ import java.util.*;
 
 @Repository
 public class UserDao {
+
 
     private static Map<Integer, UserProfile> userProfiles;
     private Map<Integer, Integer> userSessions = new HashMap<Integer, Integer>();
@@ -70,18 +72,23 @@ public class UserDao {
         return null;
     }
 
-    public Integer addUser(String login, String password, String email) {
-        final UserProfile userProfile = new UserProfile(login, email, password);
-        final Random rn = new Random();
-        for (int i = 0; i < userProfiles.size(); i++) {
-            final Integer key = rn.nextInt(100);
-            if (userProfiles.get(key) == null) {
-                userProfiles.put(key, userProfile);
-                return key;
-            }
-        }
-        return 101;
+    public Integer addUser(String login, String password, String email){
+        Integer id = Factory.getInstance().getUserProfileImpl().addNewUser(login, password, email);
+        return id;
     }
+
+//    public Integer addUser(String login, String password, String email) {
+//        final UserProfile userProfile = new UserProfile(login, email, password);
+//        final Random rn = new Random();
+//        for (int i = 0; i < userProfiles.size(); i++) {
+//            final Integer key = rn.nextInt(100);
+//            if (userProfiles.get(key) == null) {
+//                userProfiles.put(key, userProfile);
+//                return key;
+//            }
+//        }
+//        return 101;
+//    }
 
 
     public UserSession getIdUserIfExist(String login) {
