@@ -34,24 +34,33 @@ public class UserDao {
         };
     }
 
-    @JsonProperty(required = true)
-    @ApiModelProperty(notes = "Return all users", required = true)
-    public Collection<UserProfile> getAllUsers() {
-        return userProfiles.values();
+
+    public List getAllUsers(){
+        return Factory.getInstance().getUserProfileDAO().getAllUsers();
+    }
+//    public Collection<UserProfile> getAllUsers() {
+//        return userProfiles.values();
+//    }
+
+    public UserProfile getUserById(Integer id){
+        return Factory.getInstance().getUserProfileDAO().getUserById(id);
     }
 
-    @JsonProperty(required = true)
-    @ApiModelProperty(notes = "Return all user by id", required = true)
-    public UserProfile getUserById(Integer id) {
-        return userProfiles.get(id);
+//    public UserProfile getUserById(Integer id) {
+//        return userProfiles.get(id);
+//    }
+
+    public boolean removeUserById(Integer id){
+      return Factory.getInstance().getUserProfileDAO().removeUser(id);
     }
 
-    public boolean removeUserById(Integer id) {
-//        if(userProfiles.remove(id) == null)
-//            return true;
+//    public boolean removeUserById(Integer id) {
+////        if(userProfiles.remove(id) == null)
+////            return true;
+//
+//        return userProfiles.remove(id) == null;
+//    }
 
-        return userProfiles.remove(id) == null;
-    }
 
     public boolean existingUserById(Integer id) {
 //        final UserProfile userProfile = userProfiles.get(id);
@@ -61,19 +70,23 @@ public class UserDao {
         return userProfiles.get(id) != null;
     }
 
-    public UserProfile existingUserByLogin(String login) {
-        for (Map.Entry<Integer, UserProfile> entry : userProfiles.entrySet()) {
-            final Integer key = entry.getKey();
-            final UserProfile value = entry.getValue();
-            if (login.equals(value.getLogin())) {
-                return value;
-            }
-        }
-        return null;
+    public UserProfile existingUserByLogin(String login){
+        return Factory.getInstance().getUserProfileDAO().existingUserByLogin(login);
     }
 
+//    public UserProfile existingUserByLogin(String login) {
+//        for (Map.Entry<Integer, UserProfile> entry : userProfiles.entrySet()) {
+//            final Integer key = entry.getKey();
+//            final UserProfile value = entry.getValue();
+//            if (login.equals(value.getLogin())) {
+//                return value;
+//            }
+//        }
+//        return null;
+//    }
+
     public Integer addUser(String login, String password, String email){
-        Integer id = Factory.getInstance().getUserProfileImpl().addNewUser(login, password, email);
+        Integer id = Factory.getInstance().getUserProfileDAO().addNewUser(login, password, email);
         return id;
     }
 

@@ -13,12 +13,12 @@ public interface UserProfileDAO {
 
     public List<UserProfile> getAllUsers();
 
-    public Integer getUserById(Integer id);
+    public UserProfile existingUserByLogin(String login);
+
+    public UserProfile getUserById(Integer id);
 
     public Integer addNewSeesion(UserProfile user);
 
-    public Integer removeUser(String login);
-
-
+    public Boolean removeUser(Integer id);
 
 }

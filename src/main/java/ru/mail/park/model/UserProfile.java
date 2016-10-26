@@ -1,34 +1,29 @@
 package ru.mail.park.model;
 
-import org.hibernate.annotations.OptimisticLockType;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.stereotype.Component;
 
 
 import javax.persistence.*;
 
-/**
- * Created by SergeyCheremisin on 22/09/16.
- */
-//@Component
-//@Scope("session")
+
+@Component
 @Entity
-@org.hibernate.annotations.Entity(optimisticLock = OptimisticLockType.ALL)
+@Proxy(lazy=false)
 @Table(name = "Users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "Login"),
         @UniqueConstraint(columnNames = "Email") })
 public class UserProfile {
 
-//    public static final int MAX_LENGTH_LOGIN = 200;
-//    public static final int MAX_LENGTH_EMAIL = 100;
-//    public static final int MAX_LENGTH_PASSWORD = 100;
-
     @Id
     @Column(name = "User_id")
-    @GeneratedValue
+    @GenericGenerator(name="kaugen" , strategy="increment")
+    @GeneratedValue(strategy=GenerationType.TABLE)
     private Integer id;
 
     @NotEmpty
-//    @Length(max = UserProfile.MAX_LENGTH_LOGIN)
     @Column(name = "Login")
     private String login;
 
@@ -36,11 +31,9 @@ public class UserProfile {
     private String name;
 
     @NotEmpty
-//    @Length(max = UserProfile.MAX_LENGTH_EMAIL)
     @Column(name = "Email")
     private String email;
     @NotEmpty
-//    @Length(max = UserProfile.MAX_LENGTH_PASSWORD)
     @Column(name = "Password")
     private String password;
 
@@ -58,6 +51,10 @@ public class UserProfile {
     }
 
     public UserProfile() {
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setLogin(String login) {

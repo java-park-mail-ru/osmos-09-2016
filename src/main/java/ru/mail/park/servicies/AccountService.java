@@ -9,10 +9,7 @@ import ru.mail.park.model.UserProfile;
 import ru.mail.park.model.UserSession;
 
 import java.nio.file.attribute.UserPrincipal;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 
 /**
@@ -25,7 +22,7 @@ public class AccountService {
     @Autowired
     private UserDao userDao;
 
-    public Collection<UserProfile> getAllUsers() {
+    public List getAllUsers() {
         return this.userDao.getAllUsers();
     }
 

@@ -19,7 +19,7 @@ public class Factory {
         return instance;
     }
 
-    public UserProfileDAO getUserDAO(){
+    public UserProfileDAO getUserProfileDAO(){
         if(userProfielDAO == null){
             userProfielDAO = new UserProfileImpl();
         }
