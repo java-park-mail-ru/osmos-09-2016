@@ -8,7 +8,7 @@ import java.io.File;
 
 
 public class HabernateUtil {
-//    private static final SessionFactory sessionFactory;
+    //    private static final SessionFactory sessionFactory;
     private static final SessionFactory sessionFactory = buildSessionFactory();
 
     private static SessionFactory buildSessionFactory() {

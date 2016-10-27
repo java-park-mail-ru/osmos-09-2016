@@ -1,4 +1,4 @@
-package ru.mail.park.FakeDB;
+package ru.mail.park.implementationDAO;
 
 /**
  * Created by SergeyCheremisin on 30/09/16.

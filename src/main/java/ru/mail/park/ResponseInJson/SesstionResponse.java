@@ -1,10 +1,7 @@
-package ru.mail.park.model;
-
-import com.fasterxml.jackson.annotation.JsonView;
-import ru.mail.park.FakeDB.View;
+package ru.mail.park.ResponseInJson;
 
 /**
- * Created by SergeyCheremisin on 30/09/16.
+ * Created by serqeycheremisin on 27/10/2016.
  */
 public class SesstionResponse {
     private Integer sessionid;
