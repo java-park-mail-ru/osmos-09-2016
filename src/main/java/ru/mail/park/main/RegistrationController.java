@@ -15,7 +15,6 @@ import ru.mail.park.servicies.AccountService;
 import ru.mail.park.implementationDAO.View;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import javax.servlet.http.HttpSession;
 
 
 @EnableSwagger2
@@ -93,7 +92,6 @@ public class RegistrationController {
     //-----------------------------------------------------------------------//
     //Controller (servlet?), that processes an authorization request.
     //-----------------------------------------------------------------------//
-
     @RequestMapping(value = "/api/sessions", method = RequestMethod.POST)
     public ResponseEntity auth(@RequestBody RegistrationRequest body) {
         final String login = body.getLogin();
@@ -111,13 +109,6 @@ public class RegistrationController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
     }
 
-    //-----------------------------------------------------------------------//
-    //Controller that processes a request to display sessions.
-    //-----------------------------------------------------------------------//
-//    @RequestMapping(value = "/api/sessions", method = RequestMethod.GET)
-//    public ResponseEntity getSessions() {
-//        return ResponseEntity.ok(new GetSesstion(accountService.getSessions()));
-//    }
 
     //-----------------------------------------------------------------------//
     //Controller that processes a request for deleting a session.
@@ -146,77 +137,5 @@ public class RegistrationController {
 
         return ResponseEntity.ok(new GetSession(user_id));
     }
-
-//
-//    private static final class RegistrationRequest {
-//        private String login;
-//        private String name;
-//        private String password;
-//        private String email;
-//
-//        public String getLogin() {
-//            return login;
-//        }
-//
-//        public String getName() {
-//            return name;
-//        }
-//
-//        public String getPassword() {
-//            return password;
-//        }
-//
-//        public String getEmail() {
-//            return email;
-//        }
-//    }
-
-
-//    private static final class GetSession {
-//        private Integer userid;
-//
-//        public GetSession(Integer userid) {
-//            this.userid = userid;
-//        }
-//
-//        public Integer getUserId() {
-//
-//            return userid;
-//        }
-//    }
-
-//    private static final class GetSesstion {
-//        @JsonView(View.SummaryWithRecipients.class)
-//        private Collection session;
-//
-//        public void setSession(Collection session) {
-//            this.session = session;
-//        }
-//
-//        public Collection getSession() {
-//            return session;
-//        }
-//
-//        private GetSesstion(Collection session) {
-//
-//            this.session = session;
-//        }
-//    }
-
-//    private static final class SuccessResponse {
-//        private String login;
-//
-//        private SuccessResponse(String login) {
-//            this.login = login;
-//        }
-//
-//        //Функция необходима для преобразования см  https://en.wikipedia.org/wiki/Plain_Old_Java_Object
-//        @SuppressWarnings("unused")
-//        public String getLogin() {
-//            return login;
-//        }
-//
-//    }
-
 
 }

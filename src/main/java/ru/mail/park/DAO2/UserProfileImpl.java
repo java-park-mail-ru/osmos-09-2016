@@ -3,11 +3,9 @@ package ru.mail.park.DAO2;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.mail.park.model.UserProfile;
 
-import javax.persistence.EntityManager;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
