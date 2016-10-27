@@ -54,13 +54,14 @@ public class UserProfileImpl implements UserProfileDAO {
 
     public UserProfile existingUserByLogin(String login) {
 
+        List<UserProfile> users = null;
         Session session = null;
         try {
             session = HabernateUtil.getSessionFactory().openSession();
 //            userProfile = (UserProfile) session.load(UserProfile.class, login);
             Criteria criteria = session.createCriteria(UserProfile.class);
             criteria.add(Restrictions.eq("login", login));
-            List<UserProfile> users = criteria.list();
+            users = criteria.list();
 //            Query query=session.createQuery("from UserProfile where login =:username");
 //            query.setString("username", login);
         } catch (Exception e) {
@@ -71,7 +72,7 @@ public class UserProfileImpl implements UserProfileDAO {
             }
         }
 
-        return getAllUsers().get(0);
+        return users.get(0);
     }
 
 
