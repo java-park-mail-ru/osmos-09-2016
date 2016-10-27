@@ -2,17 +2,18 @@ package ru.mail.park.FakeDB;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.mail.park.Factory.Factory;
+import ru.mail.park.model.SessionClass;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.model.UserSession;
 
+import java.nio.channels.SeekableByteChannel;
 import java.util.*;
 
-/**
- * Created by SergeyCheremisin on 26/09/16.
- */
 
 
 @Repository
@@ -118,19 +119,25 @@ public class UserDao {
     }
 
 
-    public UserSession addSession(String login) {
-
-        final UserSession session = getIdUserIfExist(login);
-        if (session != null) {
-            final Random rn = new Random();
-            final Integer keySession = rn.nextInt(100);
-            userSessions.put(keySession, session.getIdUser());
-            session.setIdSession(keySession);
-            return session;
-        }
-
-        return null;
+    public SessionClass addSession(String login){
+        UserProfile userProfile = Factory.getInstance().getUserProfileDAO().existingUserByLogin(login);
+        return Factory.getInstance().getSessionClassDAO().createSession(userProfile.getId());
     }
+
+//
+//    public UserSession addSession(String login) {
+//
+//        final UserSession session = getIdUserIfExist(login);
+//        if (session != null) {
+//            final Random rn = new Random();
+//            final Integer keySession = rn.nextInt(100);
+//            userSessions.put(keySession, session.getIdUser());
+//            session.setIdSession(keySession);
+//            return session;
+//        }
+//
+//        return null;
+//    }
 
 
     public Collection getSessions() {

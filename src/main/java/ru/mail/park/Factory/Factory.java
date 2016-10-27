@@ -1,7 +1,10 @@
 package ru.mail.park.Factory;
 
+import ru.mail.park.DAO2.SessionClassDAO;
+import ru.mail.park.DAO2.SessionClassImpl;
 import ru.mail.park.DAO2.UserProfileImpl;
 import ru.mail.park.DAO2.UserProfileDAO;
+import ru.mail.park.model.SessionClass;
 
 /**
  * Created by SergeyCheremisin on 25/10/2016.
@@ -9,7 +12,7 @@ import ru.mail.park.DAO2.UserProfileDAO;
 public class Factory {
 
     private static UserProfileDAO userProfielDAO = null;
-    private static UserProfileImpl userProfileImpl = null;
+    private static SessionClassDAO sessionClassDAO = null;
     private static Factory instance = null;
 
     public static synchronized Factory getInstance(){
@@ -26,10 +29,10 @@ public class Factory {
         return userProfielDAO;
     }
 
-    public UserProfileImpl getUserProfileImpl(){
-        if(userProfileImpl == null){
-            userProfileImpl = new UserProfileImpl();
+    public SessionClassDAO getSessionClassDAO(){
+        if(userProfielDAO == null){
+            sessionClassDAO = new SessionClassImpl();
         }
-        return userProfileImpl;
+        return sessionClassDAO;
     }
 }

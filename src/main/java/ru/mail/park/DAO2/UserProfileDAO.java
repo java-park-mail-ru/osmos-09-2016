@@ -4,9 +4,7 @@ import ru.mail.park.model.UserProfile;
 
 import java.util.List;
 
-/**
- * Created by SergeyCheremisin on 25/10/2016.
- */
+
 public interface UserProfileDAO {
 
     public Integer addNewUser(String login, String email, String password);

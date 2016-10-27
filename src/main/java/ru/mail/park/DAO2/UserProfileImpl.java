@@ -1,6 +1,9 @@
 package ru.mail.park.DAO2;
 
+import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import ru.mail.park.model.UserProfile;
 
@@ -8,9 +11,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by SergeyCheremisin on 25/10/2016.
- */
+
 @Repository
 public class UserProfileImpl implements UserProfileDAO {
 
@@ -56,11 +57,15 @@ public class UserProfileImpl implements UserProfileDAO {
 
     public UserProfile existingUserByLogin(String login){
 
-        UserProfile userProfile = null;
         Session session = null;
         try{
             session = HabernateUtil.getSessionFactory().openSession();
-            userProfile = (UserProfile) session.load(UserProfile.class, login);
+//            userProfile = (UserProfile) session.load(UserProfile.class, login);
+            Criteria criteria = session.createCriteria(UserProfile.class);
+            criteria.add(Restrictions.eq("login", login));
+            List<UserProfile> users = criteria.list();
+//            Query query=session.createQuery("from UserProfile where login =:username");
+//            query.setString("username", login);
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка 'findById'", JOptionPane.OK_OPTION);
@@ -69,7 +74,8 @@ public class UserProfileImpl implements UserProfileDAO {
                 session.close();
             }
         }
-        return userProfile;
+
+        return getAllUsers().get(0);
     }
 
 
