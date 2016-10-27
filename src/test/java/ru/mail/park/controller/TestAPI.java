@@ -31,6 +31,8 @@ import ru.mail.park.servicies.AccountService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.description;
 import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.title;
@@ -81,7 +83,8 @@ public class TestAPI {
         UserProfile user3 = new UserProfile("Ephrosiniya", "zerminova.phrosia@gmial.com", "password33");
 
         when(accountServiceMock.getAllUsers()).thenReturn(Arrays.asList(user1, user2, user3));
-
+        List<UserProfile> allUsers = accountServiceMock.getAllUsers();
+//        final Map<Integer, UserProfile> userMap = allUsers.stream().filter().collect(Collectors.toMap());
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))

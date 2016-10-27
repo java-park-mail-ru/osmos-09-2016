@@ -3,9 +3,11 @@ package ru.mail.park.DAO2;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.mail.park.model.UserProfile;
 
+import javax.persistence.EntityManager;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +16,12 @@ import java.util.List;
 @Repository
 public class UserProfileImpl implements UserProfileDAO {
 
+//    @Autowired
+//private EntityManager entityManager;
 
     public UserProfile getUserById(Integer id) {
+
+
         Session session = null;
         UserProfile userProfile = null;
         try {
@@ -54,16 +60,14 @@ public class UserProfileImpl implements UserProfileDAO {
 
     public UserProfile existingUserByLogin(String login) {
 
-        List<UserProfile> users = null;
         Session session = null;
+        List users = null;
         try {
             session = HabernateUtil.getSessionFactory().openSession();
-//            userProfile = (UserProfile) session.load(UserProfile.class, login);
             Criteria criteria = session.createCriteria(UserProfile.class);
             criteria.add(Restrictions.eq("login", login));
             users = criteria.list();
-//            Query query=session.createQuery("from UserProfile where login =:username");
-//            query.setString("username", login);
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка 'findById'", JOptionPane.OK_OPTION);
         } finally {
@@ -72,7 +76,7 @@ public class UserProfileImpl implements UserProfileDAO {
             }
         }
 
-        return users.get(0);
+        return (users == null || users.size() == 0) ? null : (UserProfile)users.get(0);
     }
 
 
@@ -107,7 +111,7 @@ public class UserProfileImpl implements UserProfileDAO {
             session.delete(userProfile);
             session.getTransaction().commit();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка 'findById'", JOptionPane.OK_OPTION);
+            System.out.print("Error, 'findById");
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

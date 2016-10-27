@@ -20,7 +20,7 @@ public class AccountService {
     @Autowired
     private UserDao userDao;
 
-    public List getAllUsers() {
+    public List<UserProfile> getAllUsers() {
         return this.userDao.getAllUsers();
     }
 

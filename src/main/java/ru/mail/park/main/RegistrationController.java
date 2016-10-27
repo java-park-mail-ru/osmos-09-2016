@@ -80,7 +80,7 @@ public class RegistrationController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("{\"error\":\"empty data\"}");
         }
         final UserProfile existingUser = accountService.existingUserByLogin(login);
-        if (existingUser == null) {
+        if (existingUser != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"User with this login already exist\"}");
         }
 
@@ -95,7 +95,7 @@ public class RegistrationController {
     //-----------------------------------------------------------------------//
 
     @RequestMapping(value = "/api/sessions", method = RequestMethod.POST)
-    public ResponseEntity auth(@RequestBody RegistrationRequest body, HttpSession session_p) {
+    public ResponseEntity auth(@RequestBody RegistrationRequest body) {
         final String login = body.getLogin();
         final String password = body.getPassword();
 
@@ -103,7 +103,6 @@ public class RegistrationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
         }
         final SessionClass session = accountService.addSession(login);
-        session_p.setAttribute("User", session);
         if (session != null) {
             return ResponseEntity.ok(new SesstionResponse(session.getSession_id(), session.getUser_id()));
         }
@@ -141,7 +140,7 @@ public class RegistrationController {
 
         Integer user_id = accountService.getSessionById(id);
 
-        if (user_id == 0) {
+        if(user_id == 0){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"session not found\"}");
         }
 
