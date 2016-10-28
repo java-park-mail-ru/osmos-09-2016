@@ -122,11 +122,11 @@
             <!--<artifactId>json-path-parent</artifactId>-->
             <!--<version>1.0.0</version>-->
         <!--</dependency>-->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator-parent</artifactId>
-            <version>5.2.4.Final</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-validator-parent</artifactId>-->
+            <!--<version>5.2.4.Final</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>jboss.web</groupId>
             <artifactId>servlet-api</artifactId>
