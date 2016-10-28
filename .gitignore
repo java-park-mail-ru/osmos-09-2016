@@ -1,5 +1,5 @@
-#/target/
-#/.idea/
-#.gitignore
-#*.iml
-#.DS_Store
+/target/
+/.idea/
+.gitignore
+*.iml
+.DS_Store
