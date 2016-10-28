@@ -17,8 +17,7 @@ public class HabernateUtil {
 
     private static SessionFactory buildSessionFactory() {
         try {
-            return new AnnotationConfiguration().configure(
-                    new File("/Users/serqeycheremisin/CheremisinSergey/Tech-mail/Semester2/Java/osmos3/src/hibernate.cfg.xml")).buildSessionFactory();
+            return new AnnotationConfiguration().configure(new File("src/hibernate.cfg.xml")).buildSessionFactory();
 
 
         } catch (Throwable ex) {
