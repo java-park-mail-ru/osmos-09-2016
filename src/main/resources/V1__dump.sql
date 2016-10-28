@@ -7,11 +7,11 @@ CREATE TABLE Users (
   PRIMARY KEY(Users_id),
   UNIQUE (Login),
   UNIQUE (Email)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE Sessions(
   Session_id int not null,
   User_id int not null,
   PRIMARY KEY (Session_id),
   FOREIGN KEY (User_id) REFERENCES Users(User_id)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
