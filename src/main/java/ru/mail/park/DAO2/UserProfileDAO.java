@@ -15,8 +15,6 @@ public interface UserProfileDAO {
 
     public UserProfile getUserById(Integer id);
 
-    public Integer addNewSeesion(UserProfile user);
-
     public Boolean removeUser(Integer id);
 
 }

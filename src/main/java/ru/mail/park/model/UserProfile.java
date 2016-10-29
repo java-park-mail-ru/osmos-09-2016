@@ -1,95 +1,94 @@
 package ru.mail.park.model;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Proxy;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.stereotype.Component;
 
-
-import javax.persistence.*;
-
-
-@Component
 @Entity
-@Proxy(lazy = false)
-@Table(name = "Users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "Login"),
-        @UniqueConstraint(columnNames = "Email")})
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "login"),
+    @UniqueConstraint(columnNames = "email")})
 public class UserProfile {
 
-    @Id
-    @Column(name = "User_id")
-    @GenericGenerator(name = "kaugen", strategy = "increment")
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "users_id")
+  private Integer id;
 
-    @NotEmpty
-    @Column(name = "Login")
-    private String login;
+  @NotEmpty
+  @Column(name = "login")
+  private String login;
 
-    @Column(name = "Name")
-    private String name;
+  @Column(name = "name")
+  private String name;
 
-    @NotEmpty
-    @Column(name = "Email")
-    private String email;
-    @NotEmpty
-    @Column(name = "Password")
-    private String password;
+  @NotEmpty
+  @Column(name = "email")
+  private String email;
+  // TODO пароли не хранить открытым текстом!
+  @NotEmpty
+  @Column(name = "password")
+  private String password;
 
-    public UserProfile(String login, String email, String password) {
-        this.login = login;
-        this.email = email;
-        this.password = password;
-    }
+  public UserProfile(String login, String email, String password) {
+    this.login = login;
+    this.email = email;
+    this.password = password;
+  }
 
-    public UserProfile(String login, String name, String email, String password) {
-        this.login = login;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
+  public UserProfile(String login, String name, String email, String password) {
+    this.login = login;
+    this.name = name;
+    this.email = email;
+    this.password = password;
+  }
 
-    public UserProfile() {
-    }
+  public UserProfile() {
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
+  public void setLogin(String login) {
+    this.login = login;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getLogin() {
-        return login;
-    }
+  public String getLogin() {
+    return login;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 }
