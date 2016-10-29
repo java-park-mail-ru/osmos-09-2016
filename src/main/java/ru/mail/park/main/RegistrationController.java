@@ -1,141 +1,97 @@
 package ru.mail.park.main;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-import ru.mail.park.ResponseInJson.*;
-import ru.mail.park.exception.UserNotFoundException;
-import ru.mail.park.model.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import ru.mail.park.ResponseInJson.IdResponse;
+import ru.mail.park.ResponseInJson.RegistrationRequest;
+import ru.mail.park.ResponseInJson.SuccessResponse;
+import ru.mail.park.model.UserProfile;
 import ru.mail.park.servicies.AccountService;
-import ru.mail.park.implementationDAO.View;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-
-
-@EnableSwagger2
 @RestController
-@Scope("request")
 public class RegistrationController {
 
+  @Autowired
+  private HttpSession httpSession;
 
-    @Autowired
-    private AccountService accountService;
+  @Autowired
+  private AccountService accountService;
 
+  @RequestMapping(value = "/api/users", method = RequestMethod.GET)
+  public List<UserProfile> getAllUsers() {
+    // TODO пароли отдаём наружу? совсем ужас - надо переделать и не отдавать
+    return accountService.getAllUsers();
+  }
 
-    //-----------------------------------------------------------------------//
-    //Controller that processes a request for displaying all users.
-    //-----------------------------------------------------------------------//
-    @RequestMapping(value = "/api/users", method = RequestMethod.GET)
-    public ResponseEntity getAllUsers() {
+  @RequestMapping(value = "/api/users/{id}", method = RequestMethod.GET)
+  public ResponseEntity<?> getUserById(@PathVariable("id") Integer id) {
 
-        return ResponseEntity.ok(accountService.getAllUsers());
+    final UserProfile user = accountService.getUserById(id);
+    if (user == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"User not exist\"}");
+    }
+    return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
+  }
+
+  @RequestMapping(value = "/api/users/{id}", method = RequestMethod.DELETE)
+  public ResponseEntity<String> removeUserById(@PathVariable("id") Integer id) {
+    Integer loggedInUserId = (Integer) httpSession.getAttribute("userId");
+    if (!loggedInUserId.equals(id)) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot remove other user");
+    }
+    accountService.removeUserById(id);
+    return ResponseEntity.ok("User removed");
+  }
+
+  @RequestMapping(value = "/api/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> login(@RequestBody RegistrationRequest body) {
+
+    final String login = body.getLogin();
+    final String password = body.getPassword();
+    final String email = body.getEmail();
+    final String name = body.getName();
+
+    if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password) || StringUtils.isEmpty(email)) {
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).body("{\"error\":\"empty data\"}");
+    }
+    final UserProfile existingUser = accountService.existingUserByLogin(login);
+    if (existingUser != null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+          "{\"error\":\"User with this login already exist\"}");
     }
 
+    final Integer id = accountService.addUser(login, name, password, email);
 
-    //-----------------------------------------------------------------------//
-    //Controller that processes a request for getting user's information by id.
-    //-----------------------------------------------------------------------//
-    @RequestMapping(value = "/api/users/{id}", method = RequestMethod.GET)
-    public ResponseEntity getUserById(@PathVariable("id") Integer id) throws UserNotFoundException {
+    return ResponseEntity.ok(new IdResponse(id));
+  }
 
-        final UserProfile user = accountService.getUserById(id);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"User not exist\"}");
-        }
-        return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
+  @RequestMapping(value = "/api/sessions", method = RequestMethod.POST)
+  public ResponseEntity auth(@RequestBody RegistrationRequest body) {
+    final String login = body.getLogin();
+    final String password = body.getPassword();
+
+    if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
     }
 
+    UserProfile user = accountService.existingUserByLogin(login);
+    // TODO check password
+    httpSession.setAttribute("userId", user.getId());
 
-    //-----------------------------------------------------------------------//
-    //Controller that deletes a user by id.
-    //-----------------------------------------------------------------------//
-    @RequestMapping(value = "/api/users/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity removeUserById(@PathVariable("id") Integer id) {
-        if (!accountService.removeUserById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-        return ResponseEntity.ok("User removed");
-    }
-
-
-    //-----------------------------------------------------------------------//
-    //Controller, that processes a registration request.
-    //-----------------------------------------------------------------------//
-    @JsonView(View.Summary.class)
-    @RequestMapping(value = "/api/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity login(@RequestBody RegistrationRequest body) {
-
-        final String login = body.getLogin();
-        final String password = body.getPassword();
-        final String email = body.getEmail();
-        final String name = body.getName();
-
-        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password) || StringUtils.isEmpty(email)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("{\"error\":\"empty data\"}");
-        }
-        final UserProfile existingUser = accountService.existingUserByLogin(login);
-        if (existingUser != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"User with this login already exist\"}");
-        }
-
-        final Integer id = accountService.addUser(login, name, password, email);
-
-        return ResponseEntity.ok(new IdResponse(id));
-    }
-
-
-    //-----------------------------------------------------------------------//
-    //Controller (servlet?), that processes an authorization request.
-    //-----------------------------------------------------------------------//
-    @RequestMapping(value = "/api/sessions", method = RequestMethod.POST)
-    public ResponseEntity auth(@RequestBody RegistrationRequest body) {
-        final String login = body.getLogin();
-        final String password = body.getPassword();
-
-        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
-        }
-        final SessionClass session = accountService.addSession(login);
-        if (session != null) {
-            return ResponseEntity.ok(new SesstionResponse(session.getSession_id(), session.getUser_id()));
-        }
-
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
-    }
-
-
-    //-----------------------------------------------------------------------//
-    //Controller that processes a request for deleting a session.
-    //-----------------------------------------------------------------------//
-    @RequestMapping(value = "/api/sessions/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity removeSessions(@PathVariable("id") Integer id) {
-
-        if (accountService.removeSessions(id)) {
-            return ResponseEntity.ok("Session finished");
-        }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Session not found");
-    }
-
-    //-----------------------------------------------------------------------//
-    //Controller that processes a request to get a session.
-    //-----------------------------------------------------------------------//
-    @RequestMapping(value = "/api/sessions/{id}", method = RequestMethod.GET)
-    public ResponseEntity getSessionById(@PathVariable("id") Integer id) {
-
-        Integer user_id = accountService.getSessionById(id);
-
-        if(user_id == 0){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"session not found\"}");
-        }
-
-        return ResponseEntity.ok(new GetSession(user_id));
-    }
+    return ResponseEntity.ok("Success");
+  }
 
 }

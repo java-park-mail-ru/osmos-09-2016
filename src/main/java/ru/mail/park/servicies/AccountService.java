@@ -1,60 +1,44 @@
 package ru.mail.park.servicies;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import ru.mail.park.implementationDAO.UserDao;
-import ru.mail.park.model.SessionClass;
+import ru.mail.park.DAO2.UserProfileDAO;
 import ru.mail.park.model.UserProfile;
-
-import java.util.*;
-
 
 /**
  * Created by SergeyCheremisin on 22/09/16.
  */
 
+@Transactional
 @Service
 public class AccountService {
 
-    @Autowired
-    private UserDao userDao;
+  @Autowired
+  private UserProfileDAO userDao;
 
-    public List<UserProfile> getAllUsers() {
-        return this.userDao.getAllUsers();
-    }
+  public List<UserProfile> getAllUsers() {
+    return userDao.getAllUsers();
+  }
 
-    public UserProfile getUserById(Integer id) {
-        return this.userDao.getUserById(id);
-    }
+  public UserProfile getUserById(Integer id) {
+    return this.userDao.getUserById(id);
+  }
 
-    public boolean removeUserById(Integer id) {
-        return this.userDao.removeUserById(id);
-    }
+  public boolean removeUserById(Integer id) {
+    return this.userDao.removeUser(id);
+  }
 
-    public UserProfile existingUserByLogin(String user) {
+  public UserProfile existingUserByLogin(String user) {
 
-        return userDao.existingUserByLogin(user);
-    }
+    return userDao.existingUserByLogin(user);
+  }
 
-    public SessionClass addSession(String login) {
-
-        return userDao.addSession(login);
-    }
-
-
-    public Integer addUser(String login, String name, String password, String email) {
-        return this.userDao.addUser(login, name, password, email);
-    }
-
-
-    public Integer getSessionById(Integer id){
-        return userDao.getSessionById(id);
-    }
-
-    public boolean removeSessions(int id) {
-        return this.userDao.removeSessions(id);
-    }
-
+  public Integer addUser(String login, String name, String password, String email) {
+    return userDao.addNewUser(login, name, password, email);
+  }
 
 }
