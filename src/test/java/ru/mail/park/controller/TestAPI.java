@@ -25,7 +25,8 @@
 //import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 //import org.springframework.web.context.WebApplicationContext;
 //import ru.mail.park.TestUtil;
-//import ru.mail.park.exception.UserNotFoundException;
+//
+//import ru.mail.park.model.UserForResponse;
 //import ru.mail.park.model.UserProfile;
 //import ru.mail.park.servicies.AccountService;
 //
@@ -78,29 +79,29 @@
 //
 //    @Test
 //    public void getAllUsersTest() throws Exception{
-//        UserProfile user1 = new UserProfile("Sergey", "cheremisin.sergey@yandex.ru", "password11");
-//        UserProfile user2 = new UserProfile("Ilya", "nikitin.ilya@mail.ru", "password22");
-//        UserProfile user3 = new UserProfile("Ephrosiniya", "zerminova.phrosia@gmial.com", "password33");
+//        UserForResponse user1 = new UserForResponse("Sergey", "cheremisin.sergey@yandex.ru", "password11");
+//        UserForResponse user2 = new UserForResponse("Ilya", "nikitin.ilya@mail.ru", "password22");
+//        UserForResponse user3 = new UserForResponse("Ephrosiniya", "zerminova.phrosia@gmial.com", "password33");
 //
 //        when(accountServiceMock.getAllUsers()).thenReturn(Arrays.asList(user1, user2, user3));
-//        List<UserProfile> allUsers = accountServiceMock.getAllUsers();
+//        List<UserForResponse> allUsers = accountServiceMock.getAllUsers();
 ////        final Map<Integer, UserProfile> userMap = allUsers.stream().filter().collect(Collectors.toMap());
 //        mockMvc.perform(get("/api/users"))
 //                .andExpect(status().isOk())
 //                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 //                .andExpect(jsonPath("$", hasSize(3)))
 //                .andExpect(jsonPath("$[0].login", is("Sergey")))
-//                .andExpect(jsonPath("$[0].email", is("cheremisin.sergey@yandex.ru")))
-//                .andExpect(jsonPath("$[0].password", is("password11")))
+//                .andExpect(jsonPath("$[0].name", is("cheremisin.sergey@yandex.ru")))
+//                .andExpect(jsonPath("$[0].email", is("password11")))
 //                .andExpect(jsonPath("$[1].login", is("Ilya")))
-//                .andExpect(jsonPath("$[1].email", is("nikitin.ilya@mail.ru")))
-//                .andExpect(jsonPath("$[1].password", is("password22")))
+//                .andExpect(jsonPath("$[1].name", is("nikitin.ilya@mail.ru")))
+//                .andExpect(jsonPath("$[1].email", is("password22")))
 //                .andExpect(jsonPath("$[2].login", is("Ephrosiniya")))
-//                .andExpect(jsonPath("$[2].email", is("zerminova.phrosia@gmial.com")))
-//                .andExpect(jsonPath("$[2].password", is("password33")));
+//                .andExpect(jsonPath("$[2].name", is("zerminova.phrosia@gmial.com")))
+//                .andExpect(jsonPath("$[2].email", is("password33")));
 //
-//        verify(accountServiceMock, times(1)).getAllUsers();
-//        verifyNoMoreInteractions(accountServiceMock);
+////        verify(accountServiceMock, times(1)).getAllUsers();
+////        verifyNoMoreInteractions(accountServiceMock);
 //    }
 //
 //    @Test
@@ -173,7 +174,7 @@
 //                .contentType(MediaType.APPLICATION_JSON_UTF8)
 //                .content(TestUtil.convertObjectToJsonBytes(user1))
 //        )
-//                .andExpect(status().isBadRequest());
+//                .andExpect(status().isOk());
 ////                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8));
 //
 //    }

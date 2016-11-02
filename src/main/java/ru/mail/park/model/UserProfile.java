@@ -10,6 +10,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+
+
 @Entity
 @Table(name = "users", uniqueConstraints = {
     @UniqueConstraint(columnNames = "login"),
@@ -19,7 +21,7 @@ public class UserProfile {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "users_id")
-  private Integer id;
+  private Long id;
 
   @NotEmpty
   @Column(name = "login")
@@ -52,7 +54,7 @@ public class UserProfile {
   public UserProfile() {
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -84,7 +86,7 @@ public class UserProfile {
     return password;
   }
 
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 

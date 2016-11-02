@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,83 +17,90 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.mail.park.ResponseInJson.IdResponse;
-import ru.mail.park.ResponseInJson.RegistrationRequest;
-import ru.mail.park.ResponseInJson.SuccessResponse;
+import ru.mail.park.model.UserForResponse;
+import ru.mail.park.responseInJson.IdResponse;
+import ru.mail.park.responseInJson.RegistrationRequest;
+import ru.mail.park.responseInJson.SuccessResponse;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.servicies.AccountService;
+
+import static java.util.Objects.isNull;
 
 @RestController
 public class RegistrationController {
 
-  @Autowired
-  private HttpSession httpSession;
+    @Autowired
+    private HttpSession httpSession;
 
-  @Autowired
-  private AccountService accountService;
+    @Autowired
+    private AccountService accountService;
 
-  @RequestMapping(value = "/api/users", method = RequestMethod.GET)
-  public List<UserProfile> getAllUsers() {
-    // TODO пароли отдаём наружу? совсем ужас - надо переделать и не отдавать
-    return accountService.getAllUsers();
-  }
+    @RequestMapping(value = "/api/users", method = RequestMethod.GET)
+    public List<UserForResponse> getAllUsers() {
 
-  @RequestMapping(value = "/api/users/{id}", method = RequestMethod.GET)
-  public ResponseEntity<?> getUserById(@PathVariable("id") Integer id) {
-
-    final UserProfile user = accountService.getUserById(id);
-    if (user == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"User not exist\"}");
-    }
-    return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
-  }
-
-  @RequestMapping(value = "/api/users/{id}", method = RequestMethod.DELETE)
-  public ResponseEntity<String> removeUserById(@PathVariable("id") Integer id) {
-    Integer loggedInUserId = (Integer) httpSession.getAttribute("userId");
-    if (!loggedInUserId.equals(id)) {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot remove other user");
-    }
-    accountService.removeUserById(id);
-    return ResponseEntity.ok("User removed");
-  }
-
-  @RequestMapping(value = "/api/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> login(@RequestBody RegistrationRequest body) {
-
-    final String login = body.getLogin();
-    final String password = body.getPassword();
-    final String email = body.getEmail();
-    final String name = body.getName();
-
-    if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password) || StringUtils.isEmpty(email)) {
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).body("{\"error\":\"empty data\"}");
-    }
-    final UserProfile existingUser = accountService.existingUserByLogin(login);
-    if (existingUser != null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-          "{\"error\":\"User with this login already exist\"}");
+        return accountService.getAllUsers();
     }
 
-    final Integer id = accountService.addUser(login, name, password, email);
+    @RequestMapping(value = "/api/users/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserById(@PathVariable("id") Long id) {
 
-    return ResponseEntity.ok(new IdResponse(id));
-  }
-
-  @RequestMapping(value = "/api/sessions", method = RequestMethod.POST)
-  public ResponseEntity auth(@RequestBody RegistrationRequest body) {
-    final String login = body.getLogin();
-    final String password = body.getPassword();
-
-    if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
+        final UserProfile user = accountService.getUserById(id);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"User not exist\"}");
+        }
+        return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
     }
 
-    UserProfile user = accountService.existingUserByLogin(login);
-    // TODO check password
-    httpSession.setAttribute("userId", user.getId());
+    @RequestMapping(value = "/api/users/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> removeUserById(@PathVariable("id") Long id) {
 
-    return ResponseEntity.ok("Success");
-  }
+        if (!isNull(httpSession.getAttribute("userId")) && !id.equals((Integer) httpSession.getAttribute("userId"))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot remove other user");
+        }
+        accountService.removeUserById(id);
+        return ResponseEntity.ok("User removed");
+    }
+
+    @RequestMapping(value = "/api/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> signup(@RequestBody RegistrationRequest body) {
+
+        final String login = body.getLogin();
+        final String password = body.getPassword();
+        final String email = body.getEmail();
+        final String name = body.getName();
+
+        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password) || StringUtils.isEmpty(email)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("{\"error\":\"empty data\"}");
+        }
+        final UserProfile existingUser = accountService.existingUserByLogin(login);
+        if (existingUser != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    "{\"error\":\"User with this login already exist\"}");
+        }
+
+        final Long id = accountService.addUser(login, name, password, email);
+
+        return ResponseEntity.ok(new IdResponse(id));
+    }
+
+    @RequestMapping(value = "/api/sessions", method = RequestMethod.POST)
+    public ResponseEntity signin(@RequestBody RegistrationRequest body) {
+        final String login = body.getLogin();
+        final String password = body.getPassword();
+
+        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
+        }
+
+        UserProfile user = accountService.existingUserByLogin(login);
+
+        if (user != null && !password.equals(user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid login or password\"}");
+        }
+
+        httpSession.setAttribute("userId", user.getId());
+
+        return ResponseEntity.ok().body("{\"sessionId\":\" " + httpSession.getId() + " \"}");
+    }
 
 }

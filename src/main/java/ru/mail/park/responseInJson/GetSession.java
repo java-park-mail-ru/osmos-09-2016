@@ -1,4 +1,4 @@
-package ru.mail.park.ResponseInJson;
+package ru.mail.park.responseInJson;
 
 /**
  * Created by serqeycheremisin on 27/10/2016.

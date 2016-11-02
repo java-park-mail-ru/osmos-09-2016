@@ -1,4 +1,4 @@
-package ru.mail.park.ResponseInJson;
+package ru.mail.park.responseInJson;
 
 
 public class RegistrationRequest {
