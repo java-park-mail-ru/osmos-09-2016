@@ -70,7 +70,11 @@ public class TestAPI {
 
         when(accountServiceMock.getAllUsers()).thenReturn(Arrays.asList(user1, user2, user3));
         List<UserForResponse> allUsers = accountServiceMock.getAllUsers();
+
+
 //        final Map<Integer, UserProfile> userMap = allUsers.stream().filter().collect(Collectors.toMap());
+
+
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
