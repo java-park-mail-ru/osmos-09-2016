@@ -8,89 +8,89 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
-
-
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "login"),
-    @UniqueConstraint(columnNames = "email")})
+        @UniqueConstraint(columnNames = "login"),
+        @UniqueConstraint(columnNames = "email")})
 public class UserProfile {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "users_id")
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "users_id")
+    private Long id;
 
-  @NotEmpty
-  @Column(name = "login")
-  private String login;
+    @NotEmpty
+    @Column(name = "login")
+    private String login;
 
-  @Column(name = "name")
-  private String name;
+    @Column(name = "name")
+    private String name;
 
-  @NotEmpty
-  @Column(name = "email")
-  private String email;
-  // TODO пароли не хранить открытым текстом!
-  @NotEmpty
-  @Column(name = "password")
-  private String password;
+    @NotEmpty
+    @Column(name = "email")
+    private String email;
 
-  public UserProfile(String login, String email, String password) {
-    this.login = login;
-    this.email = email;
-    this.password = password;
-  }
+    @JsonIgnore
+    @NotEmpty
+    @Column(name = "password")
+    private String password;
 
-  public UserProfile(String login, String name, String email, String password) {
-    this.login = login;
-    this.name = name;
-    this.email = email;
-    this.password = password;
-  }
+    public UserProfile(String login, String email, String password) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
+    }
 
-  public UserProfile() {
-  }
+    public UserProfile(String login, String name, String email, String password) {
+        this.login = login;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public UserProfile() {
+    }
 
-  public void setLogin(String login) {
-    this.login = login;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-  public String getLogin() {
-    return login;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getEmail() {
-    return email;
-  }
+    public String getLogin() {
+        return login;
+    }
 
-  public String getPassword() {
-    return password;
-  }
+    public String getEmail() {
+        return email;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public String getPassword() {
+        return password;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

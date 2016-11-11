@@ -64,12 +64,12 @@ public class TestAPI {
 
     @Test
     public void getAllUsersTest() throws Exception{
-        UserForResponse user1 = new UserForResponse("Sergey", "cheremisin.sergey@yandex.ru", "password11");
-        UserForResponse user2 = new UserForResponse("Ilya", "nikitin.ilya@mail.ru", "password22");
-        UserForResponse user3 = new UserForResponse("Ephrosiniya", "zerminova.phrosia@gmial.com", "password33");
+        UserProfile user1 = new UserProfile("Sergey", "cheremisin.sergey@yandex.ru", "password11");
+        UserProfile user2 = new UserProfile("Ilya", "nikitin.ilya@mail.ru", "password22");
+        UserProfile user3 = new UserProfile("Ephrosiniya", "zerminova.phrosia@gmial.com", "password33");
 
         when(accountServiceMock.getAllUsers()).thenReturn(Arrays.asList(user1, user2, user3));
-        List<UserForResponse> allUsers = accountServiceMock.getAllUsers();
+        List<UserProfile> allUsers = accountServiceMock.getAllUsers();
 
 
 //        final Map<Integer, UserProfile> userMap = allUsers.stream().filter().collect(Collectors.toMap());

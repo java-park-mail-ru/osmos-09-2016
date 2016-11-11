@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.mail.park.DAO2.UserRequestsDAO;
-import ru.mail.park.model.UserForResponse;
 import ru.mail.park.model.UserProfile;
 
 
@@ -18,7 +17,7 @@ public class AccountService {
     @Autowired
     private UserRequestsDAO userDao;
 
-    public List<UserForResponse> getAllUsers() {
+    public List<UserProfile> getAllUsers() {
         return userDao.getAllUsers();
     }
 
@@ -28,6 +27,10 @@ public class AccountService {
 
     public boolean removeUserById(Long id) {
         return this.userDao.removeUser(id);
+    }
+
+    public UserProfile duplicateEmail(String email){
+        return userDao.duplicateEmail(email);
     }
 
     public UserProfile existingUserByLogin(String user) {
