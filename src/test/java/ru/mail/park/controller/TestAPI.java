@@ -35,9 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * Created by SergeyCheremisin on 21/10/2016.
- */
+
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @RunWith(SpringRunner.class)
 public class TestAPI {
@@ -71,9 +69,6 @@ public class TestAPI {
         List<UserProfile> allUsers = accountServiceMock.getAllUsers();
 
 
-//        final Map<Integer, UserProfile> userMap = allUsers.stream().filter().collect(Collectors.toMap());
-
-
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -88,8 +83,6 @@ public class TestAPI {
                 .andExpect(jsonPath("$[2].name", is("zerminova.phrosia@gmial.com")))
                 .andExpect(jsonPath("$[2].email", is("password33")));
 
-//        verify(accountServiceMock, times(1)).getAllUsers();
-//        verifyNoMoreInteractions(accountServiceMock);
     }
 
     @Test
@@ -164,7 +157,6 @@ public class TestAPI {
                 .content(TestUtil.convertObjectToJsonBytes(user1))
         )
                 .andExpect(status().isOk());
-//                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8));
 
     }
 
