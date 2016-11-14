@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ru.mail.park.dao.UserRequestsDaoImpl;
 import ru.mail.park.responseInJson.IdResponse;
 import ru.mail.park.responseInJson.RegistrationRequest;
 import ru.mail.park.responseInJson.SuccessResponse;
 import ru.mail.park.model.UserProfile;
-import ru.mail.park.servicies.AccountService;
+import ru.mail.park.service.AccountService;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.util.Objects.isNull;
 
@@ -36,7 +40,7 @@ public class RegistrationController {
 
 
   @RequestMapping(value = "/api/users", method = RequestMethod.GET)
-  public String getAllUsers() {
+  public ResponseEntity<String> getAllUsers() {
       objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         String arrayToJson = null;
@@ -44,8 +48,11 @@ public class RegistrationController {
              arrayToJson = objectMapper.writeValueAsString(accountService.getAllUsers());
       }catch (JsonProcessingException e) {
           e.printStackTrace();
+        final Logger log = Logger.getLogger(RegistrationController.class.getName());
+        log.log(Level.INFO, "JsonProcessingException in getAllUsers");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Internal server error\"}");
       }
-      return arrayToJson;
+      return ResponseEntity.ok(arrayToJson);
   }
 
   @RequestMapping(value = "/api/users/{id}", method = RequestMethod.GET)
@@ -107,7 +114,7 @@ public class RegistrationController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid data\"}");
     }
 
-    UserProfile user = accountService.existingUserByLogin(login);
+    final UserProfile user = accountService.existingUserByLogin(login);
 
     if(user != null && !password.equals(user.getPassword())){
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"invalid login or password\"}");

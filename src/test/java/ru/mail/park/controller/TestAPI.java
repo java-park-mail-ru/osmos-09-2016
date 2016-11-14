@@ -18,9 +18,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ru.mail.park.TestUtil;
 
-import ru.mail.park.model.UserForResponse;
 import ru.mail.park.model.UserProfile;
-import ru.mail.park.servicies.AccountService;
+import ru.mail.park.service.AccountService;
 
 import java.util.Arrays;
 import java.util.List;

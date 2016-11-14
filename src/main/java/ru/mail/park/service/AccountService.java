@@ -1,4 +1,4 @@
-package ru.mail.park.servicies;
+package ru.mail.park.service;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.mail.park.DAO2.UserRequestsDAO;
+import ru.mail.park.dao.UserRequestsDao;
 import ru.mail.park.model.UserProfile;
 
 
@@ -15,7 +15,7 @@ import ru.mail.park.model.UserProfile;
 public class AccountService {
 
     @Autowired
-    private UserRequestsDAO userDao;
+    private UserRequestsDao userDao;
 
     public List<UserProfile> getAllUsers() {
         return userDao.getAllUsers();

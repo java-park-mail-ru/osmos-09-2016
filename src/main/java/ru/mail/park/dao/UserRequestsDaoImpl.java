@@ -1,4 +1,4 @@
-package ru.mail.park.DAO2;
+package ru.mail.park.dao;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import ru.mail.park.model.UserProfile;
 
 @Repository
-public class UserRequestsDaoImpl implements UserRequestsDAO {
+public class UserRequestsDaoImpl implements UserRequestsDao {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -41,8 +41,8 @@ public class UserRequestsDaoImpl implements UserRequestsDAO {
                     .setParameter("email", email)
                     .getSingleResult();
         } catch (NoResultException nre) {
-            Logger log = Logger.getLogger(UserRequestsDaoImpl.class.getName());
-            log.log(Level.INFO, "NoResultExecptin duplicateEmail");
+            final Logger log = Logger.getLogger(UserRequestsDaoImpl.class.getName());
+            log.log(Level.INFO, "NoResultException in duplicateEmail");
         }
 
         return user;
@@ -58,8 +58,8 @@ public class UserRequestsDaoImpl implements UserRequestsDAO {
                     .setParameter("login", login)
                     .getSingleResult();
         } catch (NoResultException nre) {
-            Logger log = Logger.getLogger(UserRequestsDaoImpl.class.getName());
-            log.log(Level.INFO, "NoResultExecptin existingUserByLogin");
+            final Logger log = Logger.getLogger(UserRequestsDaoImpl.class.getName());
+            log.log(Level.INFO, "NoResultExeception in existingUserByLogin");
         }
         return user;
     }
@@ -74,8 +74,8 @@ public class UserRequestsDaoImpl implements UserRequestsDAO {
                     .createQuery("select u from UserProfile u");
             users = query.setMaxResults(50).getResultList();
         } catch (NoResultException nre) {
-            Logger log = Logger.getLogger(UserRequestsDaoImpl.class.getName());
-            log.log(Level.INFO, "NoResultExecptin getAllUsers");
+            final Logger log = Logger.getLogger(UserRequestsDaoImpl.class.getName());
+            log.log(Level.INFO, "NoResultException in getAllUsers");
         }
         return users;
     }
