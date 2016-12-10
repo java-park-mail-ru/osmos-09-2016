@@ -10,12 +10,16 @@ public interface UserRequestsDao {
 
     List<UserProfile> getAllUsers();
 
-    UserProfile duplicateEmail(String email);
+    List<UserProfile> getAllUsers(Integer limit_number);
+
+    UserProfile existingUserByEmail(String email);
 
     UserProfile existingUserByLogin(String login);
 
     UserProfile getUserById(Long id);
 
     Boolean removeUser(Long id);
+
+    UserProfile checkingUserByLoginPassword(String login, String password);
 
 }
