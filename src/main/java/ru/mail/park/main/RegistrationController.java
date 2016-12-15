@@ -69,7 +69,7 @@ public class RegistrationController {
   @RequestMapping(value = "/api/users/{id}", method = RequestMethod.DELETE)
   public ResponseEntity<?> removeUserById(@PathVariable("id") Long id) {
 
-    if (!isNull(httpSession.getAttribute("userId")) && !id.equals((Integer) httpSession.getAttribute("userId"))) {
+    if (!isNull(httpSession.getAttribute("userId")) && !id.equals((Long)httpSession.getAttribute("userId"))) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN)
               .body(new Response<>("error",new ErrorMessage("Cannot remove other user")));
     }

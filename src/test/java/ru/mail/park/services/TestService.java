@@ -61,9 +61,9 @@ public class TestService {
 
     @Test
     public void testServiceCreateUser() {
-        UserProfile user = new UserProfile("name3","login3","email3","password3");
+        UserProfile user = new UserProfile("login3","name3","email3","password3");
         assertNotNull(user);
-        accountService.addUser(user.getName(),user.getLogin(),user.getPassword(),user.getEmail());
+        accountService.addUser(user.getLogin(), user.getName(),user.getPassword(),user.getEmail());
         UserProfile test = accountService.existingUserByLogin("login3");
         assertNotNull(test);
         assertEquals(user.getPassword(),test.getPassword());
