@@ -17,8 +17,12 @@ public class AccountService {
     @Autowired
     private UserRequestsDao userDao;
 
-    public List<UserProfile> getAllUsers() {
+    public List getAllUsers() {
         return userDao.getAllUsers();
+    }
+
+    public List getAllUsers(Integer limit_number) {
+        return userDao.getAllUsers(limit_number);
     }
 
     public UserProfile getUserById(Long id) {
@@ -29,8 +33,12 @@ public class AccountService {
         return this.userDao.removeUser(id);
     }
 
-    public UserProfile duplicateEmail(String email){
-        return userDao.duplicateEmail(email);
+    public UserProfile existingUserByEmail(String email){
+        return userDao.existingUserByEmail(email);
+    }
+
+    public UserProfile checkingUserByLoginPassword(String login,String password) {
+        return userDao.checkingUserByLoginPassword(login,password);
     }
 
     public UserProfile existingUserByLogin(String user) {

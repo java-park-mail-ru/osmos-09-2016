@@ -31,7 +31,7 @@ public class UserRequestsDaoImpl implements UserRequestsDao {
     }
 
     @Override
-    public UserProfile duplicateEmail(String email) {
+    public UserProfile existingUserByEmail(String email) {
 
         UserProfile user = null;
         try {
@@ -65,6 +65,23 @@ public class UserRequestsDaoImpl implements UserRequestsDao {
     }
 
     @Override
+    public UserProfile checkingUserByLoginPassword(String login, String password) {
+        UserProfile user;
+        try {
+            user = entityManager.createQuery("SELECT user FROM UserProfile user"
+                    + " where user.login=:login" + " AND user.password=:password", UserProfile.class)
+                    .setParameter("login", login)
+                    .setParameter("password", password)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            final Logger log = Logger.getLogger(UserRequestsDaoImpl.class.getName());
+            log.log(Level.INFO, "NoResultException in checkingUserByLogin");
+            user = null;
+        }
+        return user;
+    }
+
+    @Override
     public List<UserProfile> getAllUsers() {
 
         List<UserProfile> users = null;
@@ -76,6 +93,21 @@ public class UserRequestsDaoImpl implements UserRequestsDao {
         } catch (NoResultException nre) {
             final Logger log = Logger.getLogger(UserRequestsDaoImpl.class.getName());
             log.log(Level.INFO, "NoResultException in getAllUsers");
+        }
+        return users;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<UserProfile> getAllUsers(Integer limit_number) {
+        List<UserProfile> users;
+        try {
+            final Query query = entityManager.createQuery("SELECT user FROM UserProfile user");
+            users = query.setMaxResults(limit_number).getResultList();
+        } catch (NoResultException nre) {
+            final Logger log = Logger.getLogger(UserRequestsDaoImpl.class.getName());
+            log.log(Level.WARNING,"NoResultException in getAllUsers");
+            return null;
         }
         return users;
     }
